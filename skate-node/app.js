@@ -3,7 +3,7 @@ var Game = require("./game");
 var setMatcher = require("./matcher");
 var setSetter = require("./setter");
 
-var intro = rs.question("\nWelcome to SKATE.node! Hit any key to begin\n");
+var intro = rs.question("\nWelcome to SKATE.node! Hit 'Enter' to begin\n");
 var playerAmt = rs.question("\nHow many players?\n");
 var currentGame = new Game(playerAmt);
 
@@ -31,6 +31,7 @@ while (isGameRunning) {
         if (currentGame.matchLanded) {
             console.log(`\nNice match, ${currentGame.matcher.name}!\n`);
             currentGame.matcher = setMatcher(currentGame.players, currentGame.setter);
+            currentGame.displayPlayers();
             isTrickRepeated = !isTrickRepeated;
         } else {
             //if matcher fails, then matcher gets a letter, check for win/lose con, and new matcher is randomly determined
@@ -40,7 +41,7 @@ while (isGameRunning) {
                 currentGame.removePlayer(currentGame.matcher);
                 if (currentGame.players.length === 1) {
                     currentGame.displayPlayers();
-                    console.log(`\n${currentGame.setter.name} wins!`);
+                    console.log(`\n${currentGame.setter.name} wins!\n`);
                     isGameRunning = !isGameRunning;
                     break;
                 };
