@@ -11,6 +11,7 @@ var badSlang = [
     "Bummer",
     "Shit, son",
     "Damn dude",
+    "Damn bro",
     "Shitty",
     "Ugh, so close",
     "Noooooo!",

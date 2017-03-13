@@ -7,11 +7,9 @@ PACKAGES:
 "readline-sync": "^1.4.6"
 
 UPDATES:
--mvp completed
+-added random slang generator.
 
-TODO:
+ABOUT:
+-nodeJS version of the popular basketball game HORSE but with skateboarding! Allows you to track the letters of each player as they try to be the last trickster standing.
 
--add menu option
--streamline user experience with delays
--random "stoke message" generator.
 

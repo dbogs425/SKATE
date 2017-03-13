@@ -21,9 +21,9 @@ var Game = function(playerAmt){
     this.players = generatePlayers(playerAmt);
     this.displayPlayers = 
         function(){
-        console.log("\nPlayers:")
+        console.log("\nPlayers remaining:")
         for(var i = 0; i < this.players.length; i++){
-            console.log(`\n${this.players[i].name}\nLetters: ${this.players[i].letters}\n`);
+            console.log(`\n${this.players[i].name}\n${this.players[i].letters}`);
         };
     };
     this.setter = setSetter(this.players);
