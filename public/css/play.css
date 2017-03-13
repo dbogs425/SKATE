@@ -1,0 +1,75 @@
+body {
+    background-image: url("./images/skatebkgrnd.jpg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    background-size: cover;
+    max-width: 100% !important;
+}
+
+.skaters{
+    background-color: grey;
+    opacity: .7;
+    height: 47.5vh;
+    color: white;
+    border-right: 5px solid black;
+    border-bottom: 5px solid black;
+}
+
+@media screen and (min-width: 550px) and (max-width: 650px) {
+        .skaters{
+        min-height: 200px;
+    }
+}
+@media screen and (min-width: 650px) and (max-width: 750px) {
+        .skaters{
+min-height: 225px;
+    }
+}
+@media screen and (min-width: 750px) and (max-width: 850px) {
+        .skaters{
+        min-height: 250px;
+    }
+}
+@media screen and (min-width: 850px) and (max-width: 950px) {
+        .skaters{
+        min-height: 275px;
+    }
+}
+
+.turn{
+    max-height: 100px;
+    max-width: 100px;
+}
+
+.flamecontainer{
+    display: flex;
+    justify-content: center;
+}
+.trick{
+    text-align: center;
+    background-color: black !important;
+    color: white !important;
+    border: none;
+    height: 50px;
+    width: 375px;
+    font-size: 20px;
+    opacity: .7;
+}
+.enterTrick{
+    margin-top: 10px;
+    color: white;
+    background: none;
+    border: white 3px solid;
+    letter-spacing: 5px;
+    font-size: 20px;
+    transition: ease-in-out .6s;
+}
+.trick:hover{
+    border: white 1px solid;
+    color: black;
+}
+.trick:focus{
+    outline: 0;
+    border: white 1px solid;
+}

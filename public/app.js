@@ -21,6 +21,10 @@ angular.module("skateApp", ["ngRoute"])
         templateUrl: "./views/skate.html",
         controller: "skateController"
     })
+    .when("/skate/start", {
+        templateUrl: "./views/play.html",
+        controller: "skateController"
+    })
     .otherwise({
         redirectTo: "/home"
     })

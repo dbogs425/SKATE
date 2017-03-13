@@ -1,0 +1,20 @@
+<head>
+    <link rel="stylesheet" href="./css/play.css">
+</head>
+
+<body ng-controller="skateController">
+    <div class="row" align="center">
+        <div ng-repeat="user in users" class="skaters col-sm-12 col-xs-12 col-md-6 col-lg-6" align="center">
+            <div class="flamecontainer">
+                <h1>{{user.name}}</h1>
+                <img ng-show="{{user.isSetting}}" src="./css/images/turn.png" class="turn">
+                <h3 ng-show="{{user.isMatching}}">Matching</h3>
+            </div>
+            <h1>{{user.letters}}</h1>
+            <input class="trick" ng-show="{{user.isSetting}}" ng-model="newTrick.trick" placeholder="Enter a Trick">
+            <div>
+                <button class="enterTrick" ng-show="{{user.isSetting}}">Submit</button>
+            </div>
+        </div>
+    </div>
+</body>

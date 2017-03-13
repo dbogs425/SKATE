@@ -1,8 +1,31 @@
 <head>
     <link rel="stylesheet" href="./css/skate.css">
 </head>
+
 <body>
-    <div class="container-fluid">
-        
+    <div class="container-fluid row" align="center">
+        <div class="starter" ng-hide="go">
+            <h1>S.K.A.T.E.</h1>
+            <div class="play" ng-click="go = !go">
+            </div>
+        </div>
+        <div class="form" ng-show="go">
+           <h1 class="setuph1">SETUP</h1>
+            <form>
+                <select ng-model="set.numPlayers" ng-change="setUsers(set)" class="userselect">
+                    <option value="">Select Number of Players</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                </select>
+                <div ng-repeat="user in users track by $index" class="setform">
+                    <input type="text" ng-model="user.name" placeholder="Enter username / name" class="selectName">
+                </div>
+                <div>
+                <span class="verify">{{message}}</span>
+                </div>
+                <button type="submit" class="btn start" ng-click="verify()">Start</button>
+            </form>
+        </div>
     </div>
 </body>
