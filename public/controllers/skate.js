@@ -1,12 +1,16 @@
 angular.module("skateApp")
 
 .controller("skateController", ["$scope", "gameService", "$location", function ($scope, gameService, $location) {
-
+    $scope.game = gameService.game;
     $scope.users = gameService.users;
-    
+    $scope.currentTrick = gameService.currentTrick;
+
     $scope.setUsers = function (set) {
         $scope.users = gameService.setUsers(set);
     }
+   /* gameService.getUsers.then(function(response) {
+        $scope.users = response.data;
+    }); */
     $scope.verify = function () {
         $scope.game = [];
         var noice = gameService.verify($scope.users);
@@ -15,14 +19,24 @@ angular.module("skateApp")
         } else {
             $scope.message = "";
             $location.path("/skate/start");
-            $scope.game = new gameService.Game();
-            console.log($scope.game);
-            $scope.users = $scope.game.players;
-            console.log($scope.users);
-            $scope.run();
+            $scope.game = gameService.makeGame();
         }
     }
-    $scope.run = function(){
-        console.log("hi");
+    $scope.checkTrick = function (trick, index) {
+        $scope.users[index].trickChecked = gameService.game.checkTrick(trick.trick, index);
+    }
+    $scope.landed = function(index){
+        console.log($scope.currentTrick);
+        gameService.game.landed(index, $scope.currentTrick);
+    }
+    $scope.notLanded = function(index){
+        gameService.game.notLanded(index);
+        console.log($scope.game);
+    }
+    $scope.matchLanded = function(index){
+        gameService.game.matchLanded(index);
+    }
+    $scope.matchNotLanded = function(index){
+        gameService.game.matchNotLanded(index);
     }
 }]);

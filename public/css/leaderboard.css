@@ -5,3 +5,8 @@ body{
     background-attachment: fixed;
     background-size: cover;
 }
+.container-fluid{
+    padding: 0px !important;
+    margin: 0px !important;
+    width: 100% !important;
+}

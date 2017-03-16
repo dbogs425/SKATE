@@ -3,18 +3,41 @@
 </head>
 
 <body ng-controller="skateController">
-    <div class="row" align="center">
+    <div class="row" align="center" ng-hide="{{game.over}}">
+        <div class="scorecontainer">
+            <div ng-repeat="user in users" class="scoreboard col-sm-12 col-xs-12 col-md-12 col-lg-12">
+                <div style="font-size: 20px" class="col-sm-4 col-md-4 col-lg-4 col-xs-4">
+                    <h3>{{user.name}}: {{user.letters}}</h3>
+                </div>
+            </div>
+        </div>
         <div ng-repeat="user in users" class="skaters col-sm-12 col-xs-12 col-md-6 col-lg-6" align="center">
             <div class="flamecontainer">
                 <h1>{{user.name}}</h1>
                 <img ng-show="{{user.isSetting}}" src="./css/images/turn.png" class="turn">
-                <h3 ng-show="{{user.isMatching}}">Matching</h3>
+                <img ng-show="{{user.isMatching}}" src="./css/images/next.png" class="turn">
             </div>
-            <h1>{{user.letters}}</h1>
-            <input class="trick" ng-show="{{user.isSetting}}" ng-model="newTrick.trick" placeholder="Enter a Trick">
+            <div ng-show="{{user.isSetting}}">
+            <input class="trick" ng-hide="{{user.trickSet}}" ng-hide="{{user.trickSet}}" ng-model="newTrick.trick" placeholder="Set Trick">
+            <br>
+            <button class="enterTrick" ng-hide="{{user.trickSet}}" ng-click="checkTrick(newTrick, user.playerNumber)">Submit</button>
+            </div>
             <div>
-                <button class="enterTrick" ng-show="{{user.isSetting}}">Submit</button>
+                <h3>{{user.trickMessage}}</h3>
+                <div ng-show="{{user.trickChecked}}">
+                    <button class="landed btn btn-success" ng-click="landed(user.playerNumber)">Landed</button>
+                    <button class="not btn btn-danger" ng-click="notLanded(user.playerNumber)">Fucked Up</button>
+                </div>
+            </div>
+            <div ng-show="{{user.up}}">
+                <button class="landed btn btn-success" ng-click="matchLanded(user.playerNumber)">Landed</button>
+                <button class="not btn btn-danger" ng-click="matchNotLanded(user.playerNumber)">Fucked Up</button>
             </div>
         </div>
+    </div>
+    <div ng-show="{{game.over}}" class="gameover">
+        <h1>GAME OVER</h1>
+        <h1>{{users[0].name}} WINS</h1>
+        <img src="./css/images/turn.png">
     </div>
 </body>

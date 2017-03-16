@@ -4,7 +4,7 @@ angular.module("skateApp")
     var self = this;
     this.users = [];
     this.skate = "S.K.A.T.E.";
-    this.tricksLanded = [];
+    this.currentTrick = "";
 
     this.setUsers = function (set) {
         var players = Number(set.numPlayers);
@@ -32,7 +32,7 @@ angular.module("skateApp")
         users[setter].enterTrick = true;
         return users;
     }
-    self.generatePlayers = function () {
+    this.generatePlayers = function () {
         for (var i = 0; i < this.users.length; i++) {
             users[i].lettercount = 0;
             users[i].letters = this.skate.substring(0, (users[i].lettercount * 2));
@@ -42,90 +42,121 @@ angular.module("skateApp")
     }
     var setSetter = function (players) {
         var randomizer = Math.floor((Math.random() * players.length));
+        players[randomizer].isSetting = true;
         return players[randomizer];
     };
     var setMatcher = function (players, setter) {
         //pick out the setter, splice it, and randomly assign matcher to leftover array, and push setter back.
-        var setter = players.splice(players.indexOf(setter), 1);
-        var randomizer = Math.floor(Math.random() * players.length);
-        players.push(setter[0]);
+        var x = players.indexOf(setter);
+        var i = true;
+        while (i) {
+            var randomizer = Math.floor(Math.random() * players.length);
+            if (randomizer !== x) {
+                i = false;
+            }
+        }
+        players[randomizer].isMatching = true;
         return players[randomizer];
     };
-    var toggleSetter = function(setter){
-        setter.isSetting = true;
-    }
-    var toggleMatcher = function(matcher){
-        matcher.isMatching = true;
-    }
     this.Game = function () {
         var gameSelf = this;
         this.players = self.generatePlayers();
         this.setter = setSetter(this.players);
-        this.toggleSetter = toggleSetter(this.setter);
         this.matcher = setMatcher(this.players, this.setter);
-        this.toggleMatcher = toggleMatcher(this.matcher);
-        this.tricksLanded = [];
+        this.up = false;
+        this.tricksLanded = ["hey", ""];
         this.trickSet = "";
         this.setLanded = false;
         this.matchLanded = false;
+        this.trick = "";
+        this.trickMessage = "";
+        this.trickChecked = false;
+        this.over = false;
         this.addLetter = function (player) {
             player.letters = this.skate.slice(0, (player.lettercount * 2));
         };
         this.removePlayer = function (player) {
-            var loser = self.players.splice(self.players.indexOf(player), 1);
+            var loser = gameSelf.players.splice(gameSelf.players.indexOf(player), 1);
+            if(gameSelf.players.length == 1){
+                gameSelf.over = true;
+            }
+        }
+        this.checkTrick = function (trick, index) {
+            for (var i = 0; i < gameSelf.tricksLanded.length; i++) {
+                if (gameSelf.tricksLanded[i] == trick) {
+                    gameSelf.players[index].trickChecked = false;
+                    gameSelf.players[index].trickMessage = "Shits been done son";
+                    return false;
+                }
+            }
+            gameSelf.players[index].trickSet = true;
+            gameSelf.players[index].trickChecked = true;
+            gameSelf.players[index].trickMessage = "";
+            self.currentTrick = trick;
+            return true;
+        }
+        this.toggleSetter = function (newSetter) {
+            newSetter.isSetting = true;
+            gameSelf.setter = newSetter;
+        }
+        this.toggleMatcher = function (matcher) {
+            matcher.isMatching = true;
+            gameSelf.matcher = matcher;
+        }
+        this.getUsers = function () {
+            return gameSelf.players;
+        }
+        this.landed = function (index, trick) {
+            gameSelf.players[index].trickChecked = false;
+            gameSelf.players[index].tricksLanded.push(trick);
+            console.log(trick);
+            gameSelf.tricksLanded.push(trick);
+            var matchNum = gameSelf.matcher.playerNumber;
+            for (var i = 0; i < gameSelf.players.length; i++) {
+                if (gameSelf.players[i].playerNumber == matchNum) {
+                    gameSelf.players[i].up = true;
+                }
+            }
+        }
+        this.notLanded = function (index) {
+            gameSelf.players[index].isSetting = false;
+            gameSelf.players[index].trickChecked = false;
+            gameSelf.setter = gameSelf.toggleSetter(gameSelf.matcher);
+            var matchNum = gameSelf.matcher.playerNumber;
+            for (var i = 0; i < gameSelf.players.length; i++) {
+                if (gameSelf.players[i].playerNumber == matchNum) {
+                    gameSelf.players[i].isMatching = false;
+                }
+            }
+            gameSelf.matcher = setMatcher(gameSelf.players, gameSelf.matcher);
+        }
+        this.matchLanded = function (index) {
+            gameSelf.players[gameSelf.setter.playerNumber].trickSet = false;
+            gameSelf.players[index].up = false;
+            var setNum = gameSelf.setter.playerNumber;
+            console.log(setNum);
+            for (var i = 0; i < gameSelf.players.length; i++) {
+                if (gameSelf.players[i].playerNumber == setNum) {
+                    gameSelf.players[i].isSetting = true;
+                }
+            }
+            console.log(gameSelf.players);
+            gameSelf.matcher = setMatcher(gameSelf.players, gameSelf.setter);
+        }
+        this.matchNotLanded = function (index) {
+            gameSelf.players[gameSelf.setter.playerNumber].trickSet = false;
+            gameSelf.players[index].lettercount++;
+            if (gameSelf.players[index].lettercount <= 4) {
+                gameSelf.players[index].letters = self.skate.slice(0, gameSelf.players[index].lettercount * 2);
+                gameSelf.players[index].up = false;
+                gameSelf.players[index].isMatching = false;
+                gameSelf.matcher = setMatcher(gameSelf.players, gameSelf.setter);
+            } else{
+                gameSelf.removePlayer(gameSelf.players[index]);
+            }
         }
     }
-/*function start(){
-    var isGameRunning = true;
-    while (isGameRunning) {
-        var isTrickRepeated = true;
-        while (isTrickRepeated) {
-            currentGame.trickSet = rs.question(`\n${currentGame.setter.name}, What trick will you set?`);
-            if (currentGame.tricksLanded.indexOf(currentGame.trickSet) !== -1) {
-                console.log(`\n${currentGame.trickSet} has already been set and landed before! Set a new trick.`);
-            } else {
-                isTrickRepeated = !isTrickRepeated;
-            };
-        };
-        currentGame.setLanded = rs.keyInYN("\nDid you land it???");
-        //if setter succeeds ---> matcher attempts trick, push trick to landed in game object
-        if (currentGame.setLanded) {
-            currentGame.tricksLanded.push(currentGame.trickSet);
-            console.log(`\n${prompt.genPositive()}! ${currentGame.matcher.name}, it's your turn to match!\n`);
-            currentGame.matchLanded = rs.keyInYN("\nDid you land it???");
-            //if matcher succeeds---> then setter must try again, new matcher is determined
-            if (currentGame.matchLanded) {
-                console.log(`\n${prompt.genPositive()}, ${currentGame.matcher.name}!\n`);
-                currentGame.matcher = setMatcher(currentGame.players, currentGame.setter);
-                currentGame.displayPlayers();
-                isTrickRepeated = !isTrickRepeated;
-            } else {
-                //if matcher fails, then matcher gets a letter, check for win/lose con, and new matcher is randomly determined
-                console.log(`\n${prompt.genNegative()}! ${currentGame.matcher.name} gets a letter!`);
-                currentGame.addLetter(currentGame.matcher);
-                console.log(currentGame.matcher.letters.toString());
-                if (currentGame.matcher.letters.length == 5) {
-                    currentGame.removePlayer(currentGame.matcher);
-                    if (currentGame.players.length === 1) {
-                        currentGame.displayPlayers();
-                        console.log(`\n${currentGame.setter.name} wins!\n`);
-                        isGameRunning = !isGameRunning;
-                        break;
-                    };
-                };
-                currentGame.matcher = setMatcher(currentGame.players, currentGame.setter);
-                currentGame.displayPlayers();
-                isTrickRepeated = !isTrickRepeated;
-            };
-        } else {
-            //if setter fails---> matcher becomes setter, setter loses setter status, and new matcher is determined
-            console.log(`\n${prompt.genNegative()}! ${currentGame.matcher.name} gets to attempt the next trick.\n`);
-            currentGame.setter = currentGame.matcher;
-            currentGame.matcher = setMatcher(currentGame.players, currentGame.setter);
-            currentGame.setLanded = false;
-            isTrickRepeated = !isTrickRepeated;
-        };
-
-    };
-};*/
+    this.makeGame = function () {
+        self.game = new self.Game();
+    }
 }]);
